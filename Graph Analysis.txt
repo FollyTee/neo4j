@@ -1,0 +1,41 @@
+
+##################### JOIN TEAM CHAT ###################################################
+LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/FollyTee/neo4j/main/chat-data/chat-data/chat_join_team_chat.csv" AS line
+
+
+
+MERGE (U:User {Name:line.user_id})
+
+
+
+MERGE (T:teamChat {Name:line.teamchat_session_id})
+
+
+
+MERGE (U) -[:JOIN {timestamps:line.date}]-> (T)
+
+################## LEAVE TEAM CHAT################################################
+LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/FollyTee/neo4j/main/chat-data/chat-data/chat_leave_team_chat.csv" AS line
+
+MERGE (U:User {Name:line.user_id})
+
+MERGE (T:teamChat {Name:line.teamchat_session_id})
+
+MERGE (U) -[:LEAVE {timestamps:line.date}]-> (T)
+
+#################### MENTION TEAM CHAT#########################################
+LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/FollyTee/neo4j/main/chat-data/chat-data/chat_mention_team_chat.csv" AS line
+
+MERGE (C:Chats {Name:line.chat_item})
+
+MERGE (U:User {Name:line.user_id})
+
+MERGE (C) -[:MENTION {timestamps:line.date}]->(U)
+
+################# RESPOND TEAM CHAT###############################
+
+LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/FollyTee/neo4j/main/chat-data/chat-data/chat_respond_team_chat.csv" AS line
+MERGE (CI1:ChatId1 {Name:line.chatid1})
+MERGE (CI2:ChatId2 {Name:line.chatid1})
+MERGE (CI1) -[:respond {timestamps:line.date}]->(CI2)
+
